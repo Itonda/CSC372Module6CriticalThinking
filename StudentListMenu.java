@@ -5,7 +5,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.ArrayList; 
 
-public class StudentListInput {
+public class StudentListMenu {
     // Create a Scanner object to take input from the user
     Scanner scanner = new Scanner(System.in);
     // Create a StudentList object to store the students
@@ -13,7 +13,7 @@ public class StudentListInput {
     // Testing below: TESTING methods may be removed
     // TESTING
     // Constructor to add initial test students
-    public StudentListInput() {
+    public StudentListMenu() {
         addTestStudents();
     }
     // TESTING
