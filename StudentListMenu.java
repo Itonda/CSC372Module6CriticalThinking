@@ -31,9 +31,6 @@ public class StudentListMenu {
         studentList.addStudent(new Student(109, "Jane Doe", "707 Redwood Cir"));
         System.out.println("Added 10 test students."); // Optional confirmation message
     }
-    // This method runs the main menu loop
-    // It will keep running until the user chooses to exit
-    
     // Method to print the menu options
     private void printMenu() {
         System.out.println("\n--- Student List Menu ---");
@@ -209,47 +206,29 @@ public class StudentListMenu {
             }
         }
     }
-
-    // Method to handle sorting by roll number (Asc/Desc) - Refactored
+    // Method to perform the sorting and display the results
+    private void performSortAndDisplay(Runnable sortAction, String sortDescription) {
+        sortAction.run(); // Execute the specific sort method (e.g., studentList::sortByRollNumberAsc)
+        System.out.println("\nStudents sorted by " + sortDescription + ".");
+        displayAllStudents(); // Print the sorted list
+    }
+    // Method to handle sorting by roll number (Asc/Desc)
     private void handleSortByRollNumber() {
         String prompt = "\nSort by Roll Number (Ascending or Descending)? Enter A for Ascending, D for Descending, or R to return to menu: ";
-        // Pass the specific display methods using method references
-        handleSortOrderInput(prompt, this::displaySortByRollNumberAsc, this::displaySortByRollNumberDesc);
+        // Pass lambdas calling the generic sort/display method
+        handleSortOrderInput(prompt,
+            () -> performSortAndDisplay(studentList::sortByRollNumberAsc, "roll number (Ascending)"),
+            () -> performSortAndDisplay(studentList::sortByRollNumberDesc, "roll number (Descending)")
+        );
     }
-
-    // Method to handle sorting by name (Asc/Desc) - Refactored
+    // Method to handle sorting by name (Asc/Desc)
     private void handleSortByName() {
         String prompt = "\nSort by Name (Ascending or Descending)? Enter A for Ascending, D for Descending, or R to return to menu: ";
-        // Pass the specific display methods using method references
-        handleSortOrderInput(prompt, this::displaySortByNameAsc, this::displaySortByNameDesc);
-    }
-
-    // Method to sort students by roll number in ascending order and display
-    private void displaySortByRollNumberAsc() {
-        studentList.sortByRollNumberAsc();
-        System.out.println("\nStudents sorted by roll number (Ascending).");
-        displayAllStudents(); // Print after sorting
-    }
-
-    // Method to sort students by name in ascending order and display
-    private void displaySortByNameAsc() {
-        studentList.sortByNameAsc(); // Use the sortByNameAsc method from StudentList
-        System.out.println("\nStudents sorted by name (Ascending).");
-        displayAllStudents(); // Print after sorting
-    }
-
-    // Method to sort students by roll number in descending order and display
-    private void displaySortByRollNumberDesc() {
-        studentList.sortByRollNumberDesc(); // Use the sortByRollNumberDesc method from StudentList
-        System.out.println("\nStudents sorted by roll number (Descending).");
-        displayAllStudents(); // Print after sorting
-    }
-
-    // Method to sort students by name in descending order and display
-    private void displaySortByNameDesc() {
-        studentList.sortByNameDesc(); // Use the sortByNameDesc method from StudentList
-        System.out.println("\nStudents sorted by name (Descending).");
-        displayAllStudents(); // Print after sorting
+        // Pass lambdas calling the generic sort/display method
+        handleSortOrderInput(prompt,
+            () -> performSortAndDisplay(studentList::sortByNameAsc, "name (Ascending)"),
+            () -> performSortAndDisplay(studentList::sortByNameDesc, "name (Descending)")
+        );
     }
     // This method runs the main menu loop
     // It will keep running until the user chooses to exit
