@@ -6,8 +6,6 @@ import java.util.Scanner;
 import java.util.ArrayList; 
 
 public class StudentListMenu {
-    // Create a Scanner object to take input from the user
-    Scanner scanner = new Scanner(System.in);
     // Create a StudentList object to store the students
     StudentList studentList = new StudentList();
     // Testing below: TESTING methods may be removed
@@ -67,7 +65,7 @@ public class StudentListMenu {
         return true; // Roll number is valid
     }
     // Method to add a student
-    private void addStudent() {
+    private void addStudent(Scanner scanner) {
         while (true) { // Loop until a valid roll number is entered
             try {
                 // Prompt the user to enter the roll number
@@ -101,7 +99,7 @@ public class StudentListMenu {
         }
     }
     // Method to remove a student
-    private void removeStudent() {
+    private void removeStudent(Scanner scanner) {
         boolean validInput = false;
         while (!validInput) { // Loop until a valid roll number is entered
             // Prompt the user to enter the roll number of the student to remove or 0 to return to menu
@@ -139,7 +137,7 @@ public class StudentListMenu {
         }
     }
     // Method to get a student by roll number
-    private void getStudentByRollNumber() {
+    private void getStudentByRollNumber(Scanner scanner) {
         boolean validInput = false;
         // Loop until a valid roll number is entered
         while (!validInput) {
@@ -181,7 +179,7 @@ public class StudentListMenu {
         }
     }
     // Helper method to handle the common sorting order input logic
-    private void handleSortOrderInput(String prompt, Runnable sortAscAction, Runnable sortDescAction) {
+    private void handleSortOrderInput(String prompt, Runnable sortAscAction, Runnable sortDescAction, Scanner scanner) {
         boolean validInput = false;
         // Loop until a valid sorting order is entered
         while (!validInput) {
@@ -213,64 +211,68 @@ public class StudentListMenu {
         displayAllStudents(); // Print the sorted list
     }
     // Method to handle sorting by roll number (Asc/Desc)
-    private void handleSortByRollNumber() {
+    private void handleSortByRollNumber(Scanner scanner) {
         String prompt = "\nSort by Roll Number (Ascending or Descending)? Enter A for Ascending, D for Descending, or R to return to menu: ";
         // Pass lambdas calling the generic sort/display method
         handleSortOrderInput(prompt,
             () -> performSortAndDisplay(studentList::sortByRollNumberAsc, "roll number (Ascending)"),
-            () -> performSortAndDisplay(studentList::sortByRollNumberDesc, "roll number (Descending)")
+            () -> performSortAndDisplay(studentList::sortByRollNumberDesc, "roll number (Descending)"),
+            scanner
         );
     }
     // Method to handle sorting by name (Asc/Desc)
-    private void handleSortByName() {
+    private void handleSortByName(Scanner scanner) {
         String prompt = "\nSort by Name (Ascending or Descending)? Enter A for Ascending, D for Descending, or R to return to menu: ";
         // Pass lambdas calling the generic sort/display method
         handleSortOrderInput(prompt,
             () -> performSortAndDisplay(studentList::sortByNameAsc, "name (Ascending)"),
-            () -> performSortAndDisplay(studentList::sortByNameDesc, "name (Descending)")
+            () -> performSortAndDisplay(studentList::sortByNameDesc, "name (Descending)"),
+            scanner
         );
     }
     // This method runs the main menu loop
     // It will keep running until the user chooses to exit
     public void start() {
-        while (true) {
-            printMenu(); // Print the menu options
-            try { // Added try-catch block for input validation
-                int choice = scanner.nextInt();
-                scanner.nextLine(); 
-                // Switch case to handle the user's choice
-                // Calls the appropriate method based on the user's choice
-                switch (choice) {
-                    case 1: // If the user enters 1, add a student
-                        addStudent(); 
-                        break;
-                    case 2: // If the user enters 2, remove a student
-                        removeStudent();
-                        break;
-                    case 3: // If the user enters 3, get a student by roll number
-                        getStudentByRollNumber();
-                        break;
-                    case 4: // If the user enters 4, display all students
-                        displayAllStudents();
-                        break;
-                    case 5: // If the user enters 5, sort students by roll number
-                        handleSortByRollNumber();
-                        break;
-                    case 6: // If the user enters 6, sort students by name
-                        handleSortByName();
-                        break;
-                    // The user can exit the program by entering 0
-                    case 0:
-                        System.out.println("\nExiting...");
-                        scanner.close(); // Close the scanner
-                        return;
-                    default: // If the user enters anything else, print a message indicating that the choice is invalid
-                        System.out.println("\nERROR: Invalid choice. Please try again.");
+        try (Scanner scanner = new Scanner(System.in)) { // Create a scanner object to read user input
+            while (true) { // Loop until the user chooses to exit
+                printMenu(); // Print the menu options
+                try { // Added try-catch block for input validation
+                    int choice = scanner.nextInt();
+                    scanner.nextLine(); 
+                    // Switch case to handle the user's choice
+                    // Calls the appropriate method based on the user's choice
+                    switch (choice) {
+                        case 1: // If the user enters 1, add a student
+                            addStudent(scanner); 
+                            break;
+                        case 2: // If the user enters 2, remove a student
+                            removeStudent(scanner);
+                            break;
+                        case 3: // If the user enters 3, get a student by roll number
+                            getStudentByRollNumber(scanner);
+                            break;
+                        case 4: // If the user enters 4, display all students
+                            displayAllStudents();
+                            break;
+                        case 5: // If the user enters 5, sort students by roll number
+                            handleSortByRollNumber(scanner);
+                            break;
+                        case 6: // If the user enters 6, sort students by name
+                            handleSortByName(scanner);
+                            break;
+                        // The user can exit the program by entering 0
+                        case 0:
+                            System.out.println("\nExiting...");
+                            scanner.close(); // Close the scanner
+                            return;
+                        default: // If the user enters anything else, print a message indicating that the choice is invalid
+                            System.out.println("\nERROR: Invalid choice. Please try again.");
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("\nERROR: Invalid input. Please enter a number.");
+                    scanner.nextLine(); 
                 }
-            } catch (InputMismatchException e) {
-                System.out.println("\nERROR: Invalid input. Please enter a number.");
-                scanner.nextLine(); 
             }
-        }
+        }   
     }
 }
